@@ -61,7 +61,8 @@ SKIP_PATTERNS = [
     'cache/',
     '.egg',
     'dist/',
-    '.git/'
+    '.git/',
+    'build/'
 ]
 
 def should_skip(filename):
@@ -145,19 +146,26 @@ def is_leaf(path):
 
 
 def rename_project_(path, old_name, new_name, dry=False):
-    for dirpath, dirnames, filenames in os.walk(path):
-        if not should_skip(dirpath) and is_leaf(dirpath):
-            replace_filename(dirpath, old_name, new_name, dry)
-
-    for dirpath, dirnames, filenames in os.walk(path):
+    # replace contents
+    for dirpath, dirnames, filenames in os.walk(path, topdown=False):
         for filename in filenames:
             fullpath = os.path.join(dirpath, filename)
             
             if not should_skip(fullpath) and is_leaf(fullpath):
                 replace_contents(fullpath, old_name, new_name, dry)
 
-                if old_name.lower() in filename.lower():
-                    replace_filename(fullpath, old_name, new_name, dry)
+    # move directories
+    for dirpath, dirnames, filenames in os.walk(path, topdown=False):
+        if not should_skip(dirpath) and is_leaf(dirpath):
+            replace_filename(dirpath, old_name, new_name, dry) 
+
+    # move files
+    for dirpath, dirnames, filenames in os.walk(path, topdown=False):
+        for filename in filenames:
+            fullpath = os.path.join(dirpath, filename)
+            
+            if not should_skip(fullpath) and is_leaf(fullpath) and old_name.lower() in filename.lower():
+                replace_filename(fullpath, old_name, new_name, dry)
     return True
 
     
