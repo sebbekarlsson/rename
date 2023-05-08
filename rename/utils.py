@@ -103,7 +103,6 @@ def replace_contents(filepath, old_name, new_name, dry=False):
     
     new_contents = replace_icase(contents, old_name, new_name)
 
-    print(new_contents)
     print(f'replace contents inside {filepath}')
     
     if not dry:
