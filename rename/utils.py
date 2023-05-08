@@ -74,13 +74,16 @@ def should_skip(filename):
         return True
 
     return False
-        
+
+
 def _replace_icase(match, old_name, new_name):
-    if match.group().isupper():
+    g = match.group()
+    
+    if g.isupper():
         return new_name.upper()
-    elif match.group().islower():
+    elif g.islower():
         return new_name.lower()
-    elif match.group().istitle():
+    elif g.istitle() or g[0].isupper():
         return new_name.title()
     else:
         return new_name
@@ -100,6 +103,7 @@ def replace_contents(filepath, old_name, new_name, dry=False):
     
     new_contents = replace_icase(contents, old_name, new_name)
 
+    print(new_contents)
     print(f'replace contents inside {filepath}')
     
     if not dry:
