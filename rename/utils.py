@@ -20,7 +20,8 @@ BINARY_EXTS = [
     '.bmp',
     '.gif',
     '.webm',
-    '.webmp'
+    '.webmp',
+    '.o'
 ]
 
 def is_dir(fname):
@@ -100,9 +101,7 @@ def replace_contents(filepath, old_name, new_name, dry=False):
 
     print(f'replace contents inside {filepath}')
     
-    if dry:
-        print(new_contents)
-    else:
+    if not dry:
         f = open(filepath, 'w')
         f.write(new_contents)
         f.close()
